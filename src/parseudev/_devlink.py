@@ -17,7 +17,7 @@
 
 
 """
-    pyudev.device._devlink
+    parseudev._devlink
     ======================
 
     Simple Devlink class.

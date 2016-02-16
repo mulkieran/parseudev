@@ -17,8 +17,8 @@
 
 
 """
-    pyudev.device._dm_uuid
-    ======================
+    parseudev._dm_uuid
+    ==================
 
     Parsing DM_UUID values.
 

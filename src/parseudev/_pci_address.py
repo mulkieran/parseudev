@@ -17,8 +17,8 @@
 
 
 """
-    pyudev._parsing._pci_address
-    ============================
+    parseudev._pci_address
+    ======================
 
     Parsing a PCI address.
 

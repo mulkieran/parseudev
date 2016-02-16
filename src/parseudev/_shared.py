@@ -17,8 +17,8 @@
 
 
 """
-    pyudev._parsing._shared
-    =======================
+    parseudev._shared
+    =================
 
     Some classes that parsers share.
 

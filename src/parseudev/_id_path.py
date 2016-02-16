@@ -17,8 +17,8 @@
 
 
 """
-    pyudev._parsing._id_path
-    ========================
+    parseudev._id_path
+    ==================
 
     Parsing the ID_PATH udev property.
 
