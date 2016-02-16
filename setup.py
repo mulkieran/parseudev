@@ -26,6 +26,7 @@ with open(local_file("src/parseudev/_version.py")) as o:
 setuptools.setup(
     name='parseudev',
     version=__version__,
+    url='https://pythonhosted.org/parseudev/',
     author='Anne Mulhern',
     author_email='mulhern@cs.wisc.edu',
     description='parsing of udev and sysfs artifacts',
