@@ -6,4 +6,7 @@
 .coverage
 .hypothesis
 .tox
+_build
 htmlcov
+doc/parseudev
+doc/tests
