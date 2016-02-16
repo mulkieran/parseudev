@@ -26,8 +26,6 @@
 """
 
 from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import re
 
@@ -51,26 +49,12 @@ class Parser(object):
         self.fields = fields
         self._prefix = self.format_string.split('%', 1)[0]
 
+        # pylint: disable=protected-access
         substitution_list = [
-           ('(?P<%s>%s)' % (f.name, f.regexp)) for f in self.fields
+           ('(?P<%s>%s)' % (f.name, f._regexp)) for f in self.fields
         ]
         regexp = self.format_string % tuple(substitution_list)
         self._regexp = re.compile('(?P<total>%s)' % regexp)
-
-    @property
-    def regexp(self):
-        """
-        The regular expression that should match this value.
-
-        :returns: the regular expression that should match this value
-        :rtype: compiled regular expression
-
-        The regular expression uses ?P<name> syntax.
-
-        If there is a match, match.groups('total') matches the entire matched
-        string.
-        """
-        return self._regexp
 
     @property
     def prefix(self):
@@ -91,7 +75,17 @@ class Parser(object):
         :returns: a list of the keys useful for finding portions of a match
         :rtype: list of str
         """
-        return [f.name for f in self.fields]
+        return [f.name for f in self.fields] + ['total']
+
+    def match(self, value):
+        """
+        Match ``value`` if possible.
+
+        :returns: a dict representing the match, or None
+        :rtype: dict or NoneType
+        """
+        result = self._regexp.match(value)
+        return result.groupdict() if result is not None else None
 
 
 class Field(object):
@@ -114,5 +108,5 @@ class Field(object):
         In general, '.*' may be good enough.
         """
         self.name = name
-        self.regexp = regexp
+        self._regexp = regexp
         self.description = description

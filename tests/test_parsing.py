@@ -68,10 +68,10 @@ class TestIDPATH(object):
         result = parser.parse(id_path)
         assert isinstance(result, list) and result != []
         assert all(
-           any(r[1].group('total').startswith(p.prefix) for p in parsers) \
+           any(r[1]['total'].startswith(p.prefix) for p in parsers) \
                    for r in result
         )
-        assert not any(r[1].group('total').startswith('-') for r in result)
+        assert not any(r[1]['total'].startswith('-') for r in result)
 
     _devices = [d for d in _DEVICES if d.get('ID_SAS_PATH') is not None]
     @pytest.mark.skipif(
@@ -90,10 +90,10 @@ class TestIDPATH(object):
         result = parser.parse(id_path)
         assert isinstance(result, list) and result != []
         assert all(
-           any(r[1].group('total').startswith(p.prefix) for p in parsers) \
+           any(r[1]['total'].startswith(p.prefix) for p in parsers) \
                    for r in result
         )
-        assert not any(r[1].group('total').startswith('-') for r in result)
+        assert not any(r[1]['total'].startswith('-') for r in result)
 
     def test_failure(self):
         """
@@ -162,7 +162,8 @@ class TestPCIAddress(object):
         Test correct parsing of pci-addresses.
         """
         (parser, result) = parseudev.PCIAddressParse().parse(a_device.sys_name)
-        assert all(result.group(k) != "" for k in parser.keys)
+        assert set(result.keys()) == set(parser.keys)
+        assert all(result[k] != "" for k in result.keys())
 
 
 class TestDMUUID(object):
@@ -182,4 +183,5 @@ class TestDMUUID(object):
         Test parsing of DM_UUIDs.
         """
         (parser, result) = parseudev.DMUUIDParse().parse(a_device['DM_UUID'])
-        assert all(result.group(k) != "" for k in parser.keys)
+        assert set(result.keys()) == set(parser.keys)
+        assert all(result[k] != "" for k in result.keys())

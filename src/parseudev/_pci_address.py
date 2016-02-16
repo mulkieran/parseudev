@@ -26,8 +26,6 @@
 """
 
 from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 from ._shared import Field
 from ._shared import Parser
@@ -55,6 +53,6 @@ class PCIAddressParse(object):
 
         :param str value: the value to parse
         :returns: the result of parsing
-        :rtype: Parser * (Match or NoneType)
+        :rtype: Parser * (dict or NoneType)
         """
-        return (self._PARSER, self._PARSER.regexp.match(value))
+        return (self._PARSER, self._PARSER.match(value))

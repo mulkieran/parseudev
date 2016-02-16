@@ -26,8 +26,6 @@
 """
 
 from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 from collections import defaultdict
 
@@ -153,7 +151,7 @@ class IdPathParse(object):
         """
         keys = (key for key in self._keys if value.startswith(key))
         parsers = (p for key in keys for p in self._table[key])
-        matches = ((p, p.regexp.match(value)) for p in parsers)
+        matches = ((p, p.match(value)) for p in parsers)
         return [(p, m) for (p, m) in matches if m is not None]
 
     def parse(self, value):
@@ -179,6 +177,6 @@ class IdPathParse(object):
 
             (parser, best_match) = max(matches, key=lambda x: len(x[0].prefix))
             match_list.append((parser, best_match))
-            value = value[len(best_match.group('total')) + 1:]
+            value = value[len(best_match['total']) + 1:]
 
         return match_list

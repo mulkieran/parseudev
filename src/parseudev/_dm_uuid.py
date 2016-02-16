@@ -26,9 +26,6 @@
 """
 
 from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
 
 from ._shared import Field
 from ._shared import Parser
@@ -53,6 +50,6 @@ class DMUUIDParse(object):
         Parse value.
 
         :returns: tuple of the parser and the parsed object
-        :rtype: tuple of Parser * (Match or NoneType)
+        :rtype: tuple of Parser * (dict or NoneType)
         """
-        return (self._PARSER, self._PARSER.regexp.match(value))
+        return (self._PARSER, self._PARSER.match(value))
