@@ -1,0 +1,9 @@
+*.egg-info
+*.pyc
+*.swp
+
+.cache
+.coverage
+.hypothesis
+.tox
+htmlcov
