@@ -40,7 +40,11 @@ class DMUUIDParse(object):
     _PARSER = Parser(
        r'%s-%s',
        [
-          Field('subsystem', description='device mapper subsystem'),
+          Field(
+             'subsystem',
+             regexp=r'[^-]+',
+             description='device mapper subsystem'
+          ),
           Field('UUID', description="an identifier")
        ]
     )
