@@ -28,7 +28,22 @@
 from __future__ import absolute_import
 
 from ._shared import Field
+from ._shared import ParseError
 from ._shared import Parser
+
+
+class DMUUIDParsers(object):
+    """
+    Aggregate parsers.
+    """
+    # pylint: disable=too-few-public-methods
+
+    PARSERS = {
+       'layer' : Parser(r'(cdata)|(cmeta)|(pool)|(real)|(tdata)|(tmeta)', ()),
+       'partition' : Parser(r'part%s', (Field('partition', regexp=r'[^-]'),)),
+       'component' : Parser(r'[^-]', ()),
+       'uuid' : Parser(r'.+', ())
+    }
 
 
 class DMUUIDParse(object):
@@ -37,23 +52,54 @@ class DMUUIDParse(object):
     """
     # pylint: disable=too-few-public-methods
 
-    _PARSER = Parser(
-       r'%s-%s',
-       [
-          Field(
-             'subsystem',
-             regexp=r'[^-]+',
-             description='device mapper subsystem'
-          ),
-          Field('UUID', description="an identifier")
-       ]
-    )
+    def __init__(self, parsers):
+        """
+        Initializer.
+
+        :param parsers: parser objects to parse with
+        :type parsers: dict of str * Parser
+        """
+        self.parsers = parsers
 
     def parse(self, value):
         """
-        Parse value.
+        Parse a DM_UUID field.
 
-        :returns: tuple of the parser and the parsed object
-        :rtype: tuple of Parser * (dict or NoneType)
+        :param str value: the value to parse
+        :returns: a dict of discovered components
+        :rtype: dict of str * str
+        :raises ParseError: on failure
         """
-        return (self._PARSER, self._PARSER.match(value))
+        match_dict = dict()
+
+        partition = self.parsers['partition'].match(value)
+        if partition is not None:
+            partition_str = partition['partition']
+            match_dict['partition'] = partition_str
+            value = value[len(partition['total']) + 1:]
+
+        component = self.parsers['component'].match(value)
+        if component is None:
+            raise ParseError('no component found in value %s' % value)
+
+        component_str = component['total']
+        match_dict['component'] = component_str
+        value = value[len(component_str) + 1:]
+
+        fields = value.rsplit('-', 1)
+        if len(fields) == 2:
+            (left, right) = fields
+            layer = self.parsers['layer'].match(right)
+            if layer is not None:
+                layer_str = layer['total']
+                match_dict['layer'] = layer_str
+                value = left
+
+        uuid = self.parsers['uuid'].match(value)
+        if uuid is None:
+            raise ParseError('no uuid found in value %s' % value)
+
+        uuid_str = uuid['total']
+        match_dict['uuid'] = uuid_str
+
+        return match_dict

@@ -110,3 +110,8 @@ class Field(object):
         self.name = name
         self._regexp = regexp
         self.description = description
+
+
+class ParseError(Exception):
+    """ Generic exception for this package. """
+    pass

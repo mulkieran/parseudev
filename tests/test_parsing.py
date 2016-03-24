@@ -182,6 +182,14 @@ class TestDMUUID(object):
         """
         Test parsing of DM_UUIDs.
         """
-        (parser, result) = parseudev.DMUUIDParse().parse(a_device['DM_UUID'])
-        assert set(result.keys()) == set(parser.keys)
-        assert all(result[k] != "" for k in result.keys())
+        value = a_device['DM_UUID']
+        parser = parseudev.DMUUIDParse(parseudev.DMUUIDParsers.PARSERS)
+        result = parser.parse(value)
+        assert 'uuid' in result
+        assert 'component' in result
+        assert len(result) <= 4
+
+        if value.startswith('part'):
+            assert 'partition' in result
+        else:
+            assert 'partition' not in result
