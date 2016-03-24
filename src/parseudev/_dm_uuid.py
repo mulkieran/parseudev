@@ -40,8 +40,8 @@ class DMUUIDParsers(object):
 
     PARSERS = {
        'layer' : Parser(r'(cdata)|(cmeta)|(pool)|(real)|(tdata)|(tmeta)', ()),
-       'partition' : Parser(r'part%s', (Field('partition', regexp=r'[^-]'),)),
-       'component' : Parser(r'[^-]', ()),
+       'partition' : Parser(r'part%s', (Field('partition', regexp=r'[^-]+'),)),
+       'component' : Parser(r'[^-]+', ()),
        'uuid' : Parser(r'.+', ())
     }
 
