@@ -189,7 +189,9 @@ class TestPCIAddress(object):
         """
         Test correct parsing of pci-addresses.
         """
-        (parser, result) = parseudev.PCIAddressParse().parse(a_device.sys_name)
+        parser = parseudev.PCIAddressParse()
+        result = parser.parse(a_device.sys_name)
+        assert result is not None
         assert set(result.keys()) == set(parser.keys)
         assert all(result[k] != "" for k in result.keys())
 

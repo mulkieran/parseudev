@@ -27,7 +27,11 @@
 
 from __future__ import absolute_import
 
+import abc
 import re
+
+
+from six import add_metaclass
 
 
 class Parser(object):
@@ -116,3 +120,30 @@ class Field(object):
 class ParseError(Exception):
     """ Generic exception for this package. """
     pass
+
+
+@add_metaclass(abc.ABCMeta)
+class SimpleParse(object):
+    """
+    A parser with a definite set of keys and no ordering.
+
+    If the keys are not all matched, then no value is returned.
+    """
+
+    @abc.abstractmethod
+    def parse(self, value):
+        """
+        Parse the value.
+
+        :param str value: the value to parse
+        :returns: the result of parsing
+        :rtype: dict or NoneType
+        """
+        raise NotImplementedError() # pragma: no cover
+
+    @abc.abstractmethod
+    def keys(self):
+        """
+        The expected keys.
+        """
+        raise NotImplementedError() # pragma: no cover
