@@ -213,7 +213,7 @@ class TestDMUUID(object):
         Test parsing of DM_UUIDs.
         """
         value = a_device['DM_UUID']
-        parser = parseudev.DMUUIDParse(parseudev.DMUUIDParsers.PARSERS)
+        parser = parseudev.DMUUIDParse()
         result = parser.parse(value)
         assert 'uuid' in result
         assert 'component' in result

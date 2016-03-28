@@ -32,7 +32,7 @@ from ._shared import ParseError
 from ._shared import Parser
 
 
-class DMUUIDParsers(object):
+class _DMUUIDParsers(object):
     """
     Aggregate parsers.
     """
@@ -52,14 +52,11 @@ class DMUUIDParse(object):
     """
     # pylint: disable=too-few-public-methods
 
-    def __init__(self, parsers):
+    def __init__(self):
         """
         Initializer.
-
-        :param parsers: parser objects to parse with
-        :type parsers: dict of str * Parser
         """
-        self.parsers = parsers
+        self.parsers = _DMUUIDParsers.PARSERS
 
     def parse(self, value):
         """
