@@ -14,18 +14,10 @@
 # along with this library; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
-"""
-    parseudev._version
-    ==================
+""" parseudev._shared """
 
-    Version information.
+from . import parse
 
-    .. moduleauthor::  mulhern  <amulhern@redhat.com>
-"""
-
-__version_info__ = (0, 5, 0, '')
-__version__ = "%s%s" % \
-   (
-      ".".join(str(x) for x in __version_info__[:3]),
-      "".join(str(x) for x in __version_info__[3:])
-   )
+from ._shared import Field
+from ._shared import ParseError
+from ._shared import Parser

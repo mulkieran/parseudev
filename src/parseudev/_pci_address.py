@@ -27,11 +27,14 @@
 
 from __future__ import absolute_import
 
+from ._shared import parse
+
 from ._shared import Field
+from ._shared import ParseError
 from ._shared import Parser
 
 
-class PCIAddressParse(object):
+class PCIAddressParse(parse.SimpleParse):
     """
     Parse a pci address.
     """
@@ -39,20 +42,16 @@ class PCIAddressParse(object):
 
     _PARSER = Parser(
        r'%s:%s:%s\.%s',
-       [
+       (
           Field('domain', description='range 256'),
           Field('bus', description='range 256'),
           Field('device', description='range 32'),
           Field('function', description='range 8')
-       ]
+       )
     )
 
     def parse(self, value):
-        """
-        Parse the value.
-
-        :param str value: the value to parse
-        :returns: the result of parsing
-        :rtype: Parser * (dict or NoneType)
-        """
-        return (self._PARSER, self._PARSER.match(value))
+        result = self._PARSER.match(value)
+        if result is None:
+            raise ParseError('no match for %s' % value)
+        return result

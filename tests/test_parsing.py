@@ -30,6 +30,9 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import glob
+import os
+
 from itertools import groupby
 
 import pyudev
@@ -101,8 +104,8 @@ class TestIDPATH(object):
         """
         id_path = 'pci-0000_09_00_0-sas0x5000155359566200-lun-0'
         parser = parseudev.IdPathParse(parseudev.IdPathParsers.PARSERS)
-        result = parser.parse(id_path)
-        assert result == []
+        with pytest.raises(parseudev.ParseError):
+            parser.parse(id_path)
 
 
 class TestDevlinks(object):
@@ -111,13 +114,27 @@ class TestDevlinks(object):
     """
     # pylint: disable=too-few-public-methods
 
+    def _symbolic_non_device_number_links(self):
+        """
+        Finds all symbolic links that are not in device number directories,
+        /dev/block and /dev/char.
+
+        Returns a generator of these links.
+        """
+        files = glob.glob('/dev/*') + glob.glob('/dev/*/*')
+        return (
+           f for f in files \
+              if os.path.islink(f) and \
+              os.path.dirname(f) not in ('/dev/char', '/dev/block')
+        )
+
     _devices = [d for d in _DEVICES if list(d.device_links)]
     @pytest.mark.skipif(
        len(_devices) == 0,
        reason="no devices with device links"
     )
     @given(strategies.sampled_from(_devices))
-    @settings(max_examples=5, min_satisfying_examples=1)
+    @settings(max_examples=10, min_satisfying_examples=1)
     def test_devlinks(self, a_device):
         """
         Verify that device links are in "by-.*" categories or no category.
@@ -143,6 +160,17 @@ class TestDevlinks(object):
 
         assert all(d.path == str(d) for d in devlinks)
 
+        assert all(os.path.exists(d.path) for d in devlinks)
+
+        # check that all links in filesystem that point to this device
+        # and should have corresponding device links do
+        device_node = a_device.device_node
+        for link in self._symbolic_non_device_number_links():
+            realfile = os.path.realpath(link)
+            if os.path.exists(realfile) and \
+               os.path.samefile(realfile, device_node):
+                assert parseudev.Devlink(link) in devlinks
+
 
 class TestPCIAddress(object):
     """
@@ -161,9 +189,17 @@ class TestPCIAddress(object):
         """
         Test correct parsing of pci-addresses.
         """
-        (parser, result) = parseudev.PCIAddressParse().parse(a_device.sys_name)
-        assert set(result.keys()) == set(parser.keys)
+        parser = parseudev.PCIAddressParse()
+        result = parser.parse(a_device.sys_name)
         assert all(result[k] != "" for k in result.keys())
+
+    def testExceptions(self):
+        """
+        Test exception.
+        """
+        parser = parseudev.PCIAddressParse()
+        with pytest.raises(parseudev.ParseError):
+            parser.parse("junk")
 
 
 class TestDMUUID(object):
@@ -183,13 +219,24 @@ class TestDMUUID(object):
         Test parsing of DM_UUIDs.
         """
         value = a_device['DM_UUID']
-        parser = parseudev.DMUUIDParse(parseudev.DMUUIDParsers.PARSERS)
+        parser = parseudev.DMUUIDParse()
         result = parser.parse(value)
         assert 'uuid' in result
         assert 'component' in result
         assert len(result) <= 4
+        assert set(result.keys()) <= set(parser.keys)
 
         if value.startswith('part'):
             assert 'partition' in result
         else:
             assert 'partition' not in result
+
+    def testException(self):
+        """
+        Test exceptions.
+        """
+        parser = parseudev.DMUUIDParse()
+        with pytest.raises(parseudev.ParseError):
+            parser.parse('')
+        with pytest.raises(parseudev.ParseError):
+            parser.parse('j')
