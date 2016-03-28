@@ -136,7 +136,27 @@ class Parse(object):
 
         :param str value: the value to parse
         :returns: the result of parsing
-        :rtype: dict or NoneType
+        :rtype: object
+        :raises: ParseError on failure
+        """
+        raise NotImplementedError() # pragma: no cover
+
+
+@add_metaclass(abc.ABCMeta)
+class OrderedParse(Parse):
+    """
+    A parser where the order of the elements parsed matters.
+    """
+    # pylint: disable=too-few-public-methods
+
+    @abc.abstractmethod
+    def parse(self, value):
+        """
+        Parse the value.
+
+        :param str value: the value to parse
+        :returns: the result of parsing
+        :rtype: list of tuple of Parser * dict
         :raises: ParseError on failure
         """
         raise NotImplementedError() # pragma: no cover
@@ -153,6 +173,14 @@ class SimpleParse(Parse):
 
     @abc.abstractmethod
     def parse(self, value):
+        """
+        Parse the value.
+
+        :param str value: the value to parse
+        :returns: the result of parsing
+        :rtype: dict or NoneType
+        :raises: ParseError on failure
+        """
         raise NotImplementedError() # pragma: no cover
 
 
