@@ -32,7 +32,7 @@ import re
 
 class Parser(object):
     """
-    A parser for udev ID_PATH values.
+    A generic parser object.
     """
 
     def __init__(self, format_string, fields):
@@ -64,6 +64,7 @@ class Parser(object):
         Some parsers may use the same prefix.
 
         :returns: a prefix that distinguishes the parser from other parsers
+        :rtype: str
         """
         return self._prefix
 
@@ -90,7 +91,7 @@ class Parser(object):
 
 class Field(object):
     """
-    A field in an id_path.
+    A field in a parser regular expression.
     """
     # pylint: disable=too-few-public-methods
 
