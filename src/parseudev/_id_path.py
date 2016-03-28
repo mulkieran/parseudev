@@ -29,8 +29,9 @@ from __future__ import absolute_import
 
 from collections import defaultdict
 
+from ._shared import parse
+
 from ._shared import Field
-from ._shared import OrderedParse
 from ._shared import ParseError
 from ._shared import Parser
 
@@ -122,7 +123,7 @@ class IdPathParsers(object):
     ]
 
 
-class IdPathParse(OrderedParse):
+class IdPathParse(parse.OrderedParse):
     """
     Manage the parsing of an ID_PATH value.
     """

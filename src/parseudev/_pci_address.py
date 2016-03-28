@@ -27,13 +27,14 @@
 
 from __future__ import absolute_import
 
+from ._shared import parse
+
 from ._shared import Field
 from ._shared import ParseError
 from ._shared import Parser
-from ._shared import SimpleParse
 
 
-class PCIAddressParse(SimpleParse):
+class PCIAddressParse(parse.SimpleParse):
     """
     Parse a pci address.
     """
