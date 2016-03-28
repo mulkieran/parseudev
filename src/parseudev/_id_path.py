@@ -30,6 +30,7 @@ from __future__ import absolute_import
 from collections import defaultdict
 
 from ._shared import Field
+from ._shared import ParseError
 from ._shared import Parser
 
 
@@ -173,7 +174,7 @@ class IdPathParse(object):
         while value != '':
             matches = self._parse_one(value)
             if matches == []:
-                return []
+                raise ParseError('no match found for value %s' % value)
 
             (parser, best_match) = max(matches, key=lambda x: len(x[0].prefix))
             match_list.append((parser, best_match))

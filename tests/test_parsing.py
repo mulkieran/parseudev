@@ -104,8 +104,8 @@ class TestIDPATH(object):
         """
         id_path = 'pci-0000_09_00_0-sas0x5000155359566200-lun-0'
         parser = parseudev.IdPathParse(parseudev.IdPathParsers.PARSERS)
-        result = parser.parse(id_path)
-        assert result == []
+        with pytest.raises(parseudev.ParseError):
+            parser.parse(id_path)
 
 
 class TestDevlinks(object):
