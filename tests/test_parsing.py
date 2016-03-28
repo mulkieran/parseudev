@@ -224,6 +224,7 @@ class TestDMUUID(object):
         assert 'uuid' in result
         assert 'component' in result
         assert len(result) <= 4
+        assert set(result.keys()) <= set(parser.keys)
 
         if value.startswith('part'):
             assert 'partition' in result

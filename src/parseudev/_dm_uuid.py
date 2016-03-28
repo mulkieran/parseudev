@@ -30,6 +30,7 @@ from __future__ import absolute_import
 from ._shared import Field
 from ._shared import ParseError
 from ._shared import Parser
+from ._shared import PartialParse
 
 
 class _DMUUIDParsers(object):
@@ -46,11 +47,10 @@ class _DMUUIDParsers(object):
     }
 
 
-class DMUUIDParse(object):
+class DMUUIDParse(PartialParse):
     """
     Represents a DM_UUID.
     """
-    # pylint: disable=too-few-public-methods
 
     def __init__(self):
         """
@@ -100,3 +100,7 @@ class DMUUIDParse(object):
         match_dict['uuid'] = uuid_str
 
         return match_dict
+
+    @property
+    def keys(self):
+        return self.parsers.keys()

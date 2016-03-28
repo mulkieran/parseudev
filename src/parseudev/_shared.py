@@ -129,6 +129,7 @@ class SimpleParse(object):
 
     If the keys are not all matched, then no value is returned.
     """
+    # pylint: disable=too-few-public-methods
 
     @abc.abstractmethod
     def parse(self, value):
@@ -139,5 +140,20 @@ class SimpleParse(object):
         :returns: the result of parsing
         :rtype: dict or NoneType
         :raises: ParseError on failure
+        """
+        raise NotImplementedError() # pragma: no cover
+
+
+@add_metaclass(abc.ABCMeta)
+class PartialParse(SimpleParse):
+    """
+    Extends SimpleParse by allowing only a partial match for keys.
+    """
+    # pylint: disable=too-few-public-methods
+
+    @abc.abstractmethod
+    def keys(self):
+        """
+        The possible keys for this parse.
         """
         raise NotImplementedError() # pragma: no cover
