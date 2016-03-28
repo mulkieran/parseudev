@@ -230,3 +230,13 @@ class TestDMUUID(object):
             assert 'partition' in result
         else:
             assert 'partition' not in result
+
+    def testException(self):
+        """
+        Test exceptions.
+        """
+        parser = parseudev.DMUUIDParse()
+        with pytest.raises(parseudev.ParseError):
+            parser.parse('')
+        with pytest.raises(parseudev.ParseError):
+            parser.parse('j')
