@@ -33,6 +33,9 @@ import os
 class Devlink(object):
     """
     Represents a device link.
+
+    These are a bit anomalous, since they are recognized by their structure
+    as paths.
     """
 
     def __init__(self, path):
@@ -96,3 +99,6 @@ class Devlink(object):
         if not self.has_category:
             return None
         return os.path.basename(os.path.dirname(self._path))
+
+    def __eq__(self, other):
+        return self.path == other.path

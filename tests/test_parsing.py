@@ -30,6 +30,9 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import glob
+import os
+
 from itertools import groupby
 
 import pyudev
@@ -111,6 +114,20 @@ class TestDevlinks(object):
     """
     # pylint: disable=too-few-public-methods
 
+    def _symbolic_non_device_number_links(self):
+        """
+        Finds all symbolic links that are not in device number directories,
+        /dev/block and /dev/char.
+
+        Returns a generator of these links.
+        """
+        files = glob.glob('/dev/*') + glob.glob('/dev/*/*')
+        return (
+           f for f in files \
+              if os.path.islink(f) and \
+              os.path.dirname(f) not in ('/dev/char', '/dev/block')
+        )
+
     _devices = [d for d in _DEVICES if list(d.device_links)]
     @pytest.mark.skipif(
        len(_devices) == 0,
@@ -142,6 +159,17 @@ class TestDevlinks(object):
            for d in devlinks)
 
         assert all(d.path == str(d) for d in devlinks)
+
+        assert all(os.path.exists(d.path) for d in devlinks)
+
+        # check that all links in filesystem that point to this device
+        # and should have corresponding device links do
+        device_node = a_device.device_node
+        for link in self._symbolic_non_device_number_links():
+            realfile = os.path.realpath(link)
+            if os.path.exists(realfile) and \
+               os.path.samefile(realfile, device_node):
+                assert parseudev.Devlink(link) in devlinks
 
 
 class TestPCIAddress(object):
