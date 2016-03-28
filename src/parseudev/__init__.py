@@ -25,5 +25,7 @@ from ._id_path import IdPathParsers
 
 from ._pci_address import PCIAddressParse
 
+from ._shared import ParseError
+
 from ._version import __version__
 from ._version import __version_info__

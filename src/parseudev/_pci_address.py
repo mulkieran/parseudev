@@ -28,6 +28,7 @@
 from __future__ import absolute_import
 
 from ._shared import Field
+from ._shared import ParseError
 from ._shared import Parser
 from ._shared import SimpleParse
 
@@ -49,7 +50,10 @@ class PCIAddressParse(SimpleParse):
     )
 
     def parse(self, value):
-        return self._PARSER.match(value)
+        result = self._PARSER.match(value)
+        if result is None:
+            raise ParseError('no match for %s' % value)
+        return result
 
     @property
     def keys(self):
