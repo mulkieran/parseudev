@@ -134,7 +134,7 @@ class TestDevlinks(object):
        reason="no devices with device links"
     )
     @given(strategies.sampled_from(_devices))
-    @settings(max_examples=5, min_satisfying_examples=1)
+    @settings(max_examples=10, min_satisfying_examples=1)
     def test_devlinks(self, a_device):
         """
         Verify that device links are in "by-.*" categories or no category.
