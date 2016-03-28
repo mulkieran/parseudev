@@ -123,11 +123,9 @@ class ParseError(Exception):
 
 
 @add_metaclass(abc.ABCMeta)
-class SimpleParse(object):
+class Parse(object):
     """
-    A parser with a definite set of keys and no ordering.
-
-    If the keys are not all matched, then no value is returned.
+    Very abstract class for aggregating parsers.
     """
     # pylint: disable=too-few-public-methods
 
@@ -141,6 +139,20 @@ class SimpleParse(object):
         :rtype: dict or NoneType
         :raises: ParseError on failure
         """
+        raise NotImplementedError() # pragma: no cover
+
+
+@add_metaclass(abc.ABCMeta)
+class SimpleParse(Parse):
+    """
+    A parser with a definite set of keys and no ordering.
+
+    If the keys are not all matched, then no value is returned.
+    """
+    # pylint: disable=too-few-public-methods
+
+    @abc.abstractmethod
+    def parse(self, value):
         raise NotImplementedError() # pragma: no cover
 
 
