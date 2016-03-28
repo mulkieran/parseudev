@@ -54,7 +54,3 @@ class PCIAddressParse(SimpleParse):
         if result is None:
             raise ParseError('no match for %s' % value)
         return result
-
-    @property
-    def keys(self):
-        return self._PARSER.keys

@@ -191,7 +191,6 @@ class TestPCIAddress(object):
         """
         parser = parseudev.PCIAddressParse()
         result = parser.parse(a_device.sys_name)
-        assert set(result.keys()) == set(parser.keys)
         assert all(result[k] != "" for k in result.keys())
 
     def testExceptions(self):

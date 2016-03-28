@@ -138,12 +138,6 @@ class SimpleParse(object):
         :param str value: the value to parse
         :returns: the result of parsing
         :rtype: dict or NoneType
-        """
-        raise NotImplementedError() # pragma: no cover
-
-    @abc.abstractmethod
-    def keys(self):
-        """
-        The expected keys.
+        :raises: ParseError on failure
         """
         raise NotImplementedError() # pragma: no cover
