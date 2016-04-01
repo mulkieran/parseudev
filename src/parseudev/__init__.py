@@ -21,6 +21,8 @@ from ._devlink import Devlink
 from ._id_path import IdPathParse
 from ._id_path import IdPathParsers
 
+from ._lookup import Lookup
+
 from ._pci_address import PCIAddressParse
 
 from ._shared import ParseError

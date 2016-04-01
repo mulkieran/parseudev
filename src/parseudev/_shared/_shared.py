@@ -114,5 +114,21 @@ class Field(object):
 
 
 class ParseError(Exception):
-    """ Generic exception for this package. """
+    """ Parse exception. """
     pass
+
+
+class OpaqueValueError(Exception):
+    """ Exception raised when looking up parser for an opaque value. """
+
+    def __init__(self, name): # pragma: no cover
+        """
+        Initializer.
+
+        :param str name: name of property to parse
+        """
+        # pylint: disable=super-init-not-called
+        self._name = name
+
+    def __str__(self): # pragma: no cover
+        return "%s is an opaque value" % self._name
