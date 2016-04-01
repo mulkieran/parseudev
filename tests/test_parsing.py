@@ -75,6 +75,7 @@ class TestIDPATH(object):
                    for r in result
         )
         assert not any(r[1]['total'].startswith('-') for r in result)
+        assert all(set(r.keys()) == set(p.keys) for (p, r) in result)
 
     _devices = [d for d in _DEVICES if d.get('ID_SAS_PATH') is not None]
     @pytest.mark.skipif(
