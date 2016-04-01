@@ -75,6 +75,7 @@ class TestIDPATH(object):
                    for r in result
         )
         assert not any(r[1]['total'].startswith('-') for r in result)
+        assert all(set(r.keys()) == set(p.keys) for (p, r) in result)
 
     _devices = [d for d in _DEVICES if d.get('ID_SAS_PATH') is not None]
     @pytest.mark.skipif(
@@ -200,43 +201,3 @@ class TestPCIAddress(object):
         parser = parseudev.PCIAddressParse()
         with pytest.raises(parseudev.ParseError):
             parser.parse("junk")
-
-
-class TestDMUUID(object):
-    """
-    Test parsing a DM_UUID str.
-    """
-    # pylint: disable=too-few-public-methods
-    _devices = [d for d in _DEVICES if d.get('DM_UUID') is not None]
-    @pytest.mark.skipif(
-       len(_devices) == 0,
-       reason="no devices with DM_UUID property"
-    )
-    @given(strategies.sampled_from(_devices))
-    @settings(min_satisfying_examples=1)
-    def test_parsing_dmuuid(self, a_device):
-        """
-        Test parsing of DM_UUIDs.
-        """
-        value = a_device['DM_UUID']
-        parser = parseudev.DMUUIDParse()
-        result = parser.parse(value)
-        assert 'uuid' in result
-        assert 'component' in result
-        assert len(result) <= 4
-        assert set(result.keys()) <= set(parser.keys)
-
-        if value.startswith('part'):
-            assert 'partition' in result
-        else:
-            assert 'partition' not in result
-
-    def testException(self):
-        """
-        Test exceptions.
-        """
-        parser = parseudev.DMUUIDParse()
-        with pytest.raises(parseudev.ParseError):
-            parser.parse('')
-        with pytest.raises(parseudev.ParseError):
-            parser.parse('j')

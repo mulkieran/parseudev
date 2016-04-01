@@ -19,5 +19,6 @@
 from . import parse
 
 from ._shared import Field
+from ._shared import OpaqueValueError
 from ._shared import ParseError
 from ._shared import Parser
