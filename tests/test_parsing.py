@@ -201,3 +201,32 @@ class TestPCIAddress(object):
         parser = parseudev.PCIAddressParse()
         with pytest.raises(parseudev.ParseError):
             parser.parse("junk")
+
+
+class TestDMUUID(object):
+    """
+    Test that DM_UUID are all parsed into two parts.
+    """
+
+    _devices = [d for d in _DEVICES if 'DM_UUID' in d]
+    @pytest.mark.skipif(len(_devices) == 0, reason="no devices with DM_UUID")
+    @given(strategies.sampled_from(_devices))
+    @settings(min_satisfying_examples=1)
+    def test_parsing_dm_uuid(self, a_device):
+        """
+        Test that both values are obtained and subsystem is non-empty.
+        """
+        parser = parseudev.DMUUIDParse()
+        result = parser.parse(a_device['DM_UUID'])
+        assert 'subsystem' in result
+        assert 'rest' in result
+        assert len(result['subsystem']) > 0
+
+    def test_exceptions(self):
+        """
+        The only bad UUID is one with an empty subsystem, anything else should
+        look good.
+        """
+        parser = parseudev.DMUUIDParse()
+        with pytest.raises(parseudev.ParseError):
+            parser.parse('1abc-uuid')

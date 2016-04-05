@@ -27,6 +27,8 @@
 
 from __future__ import absolute_import
 
+from ._dm_uuid import DMUUIDParse
+
 from ._id_path import IdPathParse
 from ._id_path import IdPathParsers
 
@@ -39,9 +41,10 @@ class Lookup(object): # pragma: no cover
     """
     # pylint: disable=too-few-public-methods
 
-    _OPAQUE = ["DM_UUID"]
+    _OPAQUE = []
 
     _MAP = {
+       "DM_UUID" : DMUUIDParse(),
        "ID_PATH" : IdPathParse(IdPathParsers.PARSERS),
        "ID_SAS_PATH" : IdPathParse(IdPathParsers.PARSERS)
     }

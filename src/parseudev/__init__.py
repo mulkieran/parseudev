@@ -18,6 +18,8 @@
 
 from ._devlink import Devlink
 
+from ._dm_uuid import DMUUIDParse
+
 from ._id_path import IdPathParse
 from ._id_path import IdPathParsers
 
